@@ -53,7 +53,6 @@ type AlertOptions = {
     cancelable?: ?boolean,
     userInterfaceStyle?: 'unspecified' | 'light' | 'dark',
     onDismiss?: ?() => void,
-    ...
 };
 
 /**
@@ -73,21 +72,24 @@ type ButtonsArray = Array<{
         onPress?: ?Function,
 }>;
 
+type AlertButtonStyle = 'default' | 'cancel' | 'destructive';
+
 type Buttons = Array<{
     text?: string,
     onPress?: ?Function,
     isPreferred?: boolean,
     style?: AlertButtonStyle,
-    ...
 }>;
 
-const ACTION_KEYS = {
-    buttonClicked: 'buttonClicked',
-    dismissed: 'dismissed',
-    buttonPositive: -1,
-    buttonNegative: -2,
-    buttonNeutral: -3,
-}
+type DialogOptions = {
+    title?: string,
+    message?: string,
+    buttonPositive?: string,
+    buttonNegative?: string,
+    buttonNeutral?: string,
+    items?: Array<string>,
+    cancelable?: boolean,
+};
 
 function alert(
     title: ?string,
@@ -220,4 +222,4 @@ function prompt(
 export default {
     alert,
     prompt
-}
+};
