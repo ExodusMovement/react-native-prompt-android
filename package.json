@@ -16,7 +16,7 @@
         "android"
     ],
     "scripts": {
-        "lint": "eslint ./"
+        "lint": "eslint ./ --ignore-pattern '**/Example/*'"
     },
     "devDependencies": {
         "babel-eslint": "^6.1.2",
