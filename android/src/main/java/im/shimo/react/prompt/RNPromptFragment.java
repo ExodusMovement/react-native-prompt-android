@@ -170,8 +170,12 @@ public class RNPromptFragment extends DialogFragment implements DialogInterface.
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (mInputText != null && mListener != null) {
-            mListener.onConfirm(which, mInputText.getText().toString());
+        if (mListener != null) {
+            if (mInputText != null) {
+                mListener.onConfirm(which, mInputText.getText().toString());    
+            } else {
+                mListener.onClick(dialog, which);
+            }
         }
     }
 

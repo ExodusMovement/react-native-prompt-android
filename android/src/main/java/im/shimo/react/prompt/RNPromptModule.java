@@ -255,7 +255,12 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            onConfirm(which, "");
+            if (!mCallbackConsumed) {
+                if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    mCallback.invoke(ACTION_BUTTON_CLICKED, which);
+                    mCallbackConsumed = true;
+                }
+            }
         }
 
         public void onConfirm(int which, String input) {
