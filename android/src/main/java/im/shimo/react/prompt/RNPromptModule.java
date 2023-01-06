@@ -42,6 +42,7 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
     /* package */ static final String KEY_STYLE = "style";
     /* package */ static final String KEY_DEFAULT_VALUE = "defaultValue";
     /* package */ static final String KEY_PLACEHOLDER = "placeholder";
+    /* package */ static final String KEY_SHOW_INPUT = "showInput";
 
     /* package */ static final Map<String, Object> CONSTANTS = MapBuilder.<String, Object>of(
             ACTION_BUTTON_CLICKED, ACTION_BUTTON_CLICKED,
@@ -183,6 +184,7 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
         if (options.hasKey(KEY_PLACEHOLDER)) {
             args.putString(KEY_PLACEHOLDER, options.getString(KEY_PLACEHOLDER));
         }
+        args.putBoolean(KEY_SHOW_INPUT, true);
         fragmentManagerHelper.showNewAlert(mIsInForeground, args, callback);
     }
 
