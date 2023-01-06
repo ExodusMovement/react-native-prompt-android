@@ -68,8 +68,13 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
 
     @Override
     public void onHostPause() {
-        // Don't show the dialog if the host is paused.
         mIsInForeground = false;
+        FragmentManagerHelper fragmentManagerHelper = getFragmentManagerHelper();
+        if (fragmentManagerHelper != null) {
+            fragmentManagerHelper.dismissExisting();
+        } else {
+            FLog.w(DialogModule.class, "onHostPause called but no FragmentManager found");
+        }
     }
 
     @Override
