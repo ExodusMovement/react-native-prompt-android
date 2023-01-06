@@ -41,12 +41,19 @@ export type PromptStyle = $Enum<{
     'shimo': string,
 }>;
 
-type Options = {
+type PromptOptions = {
     cancelable?: ?boolean;
     type?: ?PromptType;
     defaultValue?: ?String;
     placeholder?: ?String;
     style?: ?PromptStyle;
+};
+
+type AlertOptions = {
+    cancelable?: ?boolean,
+    userInterfaceStyle?: 'unspecified' | 'light' | 'dark',
+    onDismiss?: ?() => void,
+    ...
 };
 
 /**
@@ -66,11 +73,82 @@ type ButtonsArray = Array<{
         onPress?: ?Function,
 }>;
 
-export default function prompt(
+type Buttons = Array<{
+    text?: string,
+    onPress?: ?Function,
+    isPreferred?: boolean,
+    style?: AlertButtonStyle,
+    ...
+}>;
+
+const ACTION_KEYS = {
+    buttonClicked: 'buttonClicked',
+    dismissed: 'dismissed',
+    buttonPositive: -1,
+    buttonNegative: -2,
+    buttonNeutral: -3,
+}
+
+function alert(
+    title: ?string,
+    message?: ?string,
+    buttons?: Buttons,
+    options?: AlertOptions,
+): void {
+    
+    const config: DialogOptions = {
+        title: title || '',
+        message: message || '',
+        cancelable: false,
+    };
+
+    if (options && options.cancelable) {
+        config.cancelable = options.cancelable;
+    }
+    // At most three buttons (neutral, negative, positive). Ignore rest.
+    // The text 'OK' should be probably localized. iOS Alert does that in native.
+    const defaultPositiveText = 'OK';
+    const validButtons: Buttons = buttons
+        ? buttons.slice(0, 3)
+        : [{text: defaultPositiveText}];
+    const buttonPositive = validButtons.pop();
+    const buttonNegative = validButtons.pop();
+    const buttonNeutral = validButtons.pop();
+
+    if (buttonNeutral) {
+        config.buttonNeutral = buttonNeutral.text || '';
+    }
+    if (buttonNegative) {
+        config.buttonNegative = buttonNegative.text || '';
+    }
+    if (buttonPositive) {
+        config.buttonPositive = buttonPositive.text || defaultPositiveText;
+    }
+
+    /* $FlowFixMe[missing-local-annot] The type annotation(s) required by
+    * Flow's LTI update could not be added via codemod */
+    const onAction = (action, buttonKey) => {
+        if (action === PromptAndroid.buttonClicked) {
+            if (buttonKey === PromptAndroid.buttonNeutral) {
+                buttonNeutral.onPress && buttonNeutral.onPress();
+            } else if (buttonKey === PromptAndroid.buttonNegative) {
+                buttonNegative.onPress && buttonNegative.onPress();
+            } else if (buttonKey === PromptAndroid.buttonPositive) {
+                buttonPositive.onPress && buttonPositive.onPress();
+            }
+        } else if (action === PromptAndroid.dismissed) {
+            options && options.onDismiss && options.onDismiss();
+        }
+    };
+
+    PromptAndroid.alertWithArgs(config, onAction);
+}
+
+function prompt(
     title: ?string,
     message?: ?string,
     callbackOrButtons?: ?((text: string) => void) | ButtonsArray,
-    options?: Options
+    options?: PromptOptions
 ): void {
     const defaultButtons = [
       {
@@ -137,4 +215,9 @@ export default function prompt(
             }
         }
     );
+}
+
+export default {
+    alert,
+    prompt
 }

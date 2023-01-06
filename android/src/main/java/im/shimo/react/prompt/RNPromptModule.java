@@ -93,6 +93,45 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
         }
     }
 
+    @ReactMethod
+    public void alertWithArgs(
+         ReadableMap options, final Callback callback) {
+        final FragmentManagerHelper fragmentManagerHelper = getFragmentManagerHelper();
+        if (fragmentManagerHelper == null) {
+            FLog.w(RNPromptModule.class, "Tried to show an alert while not attached to an Activity");
+            return;
+        }
+
+        final Bundle args = new Bundle();
+        if (options.hasKey(KEY_TITLE)) {
+            args.putString(RNPromptFragment.ARG_TITLE, options.getString(KEY_TITLE));
+        }        
+        if (options.hasKey(KEY_MESSAGE)) {
+            args.putString(RNPromptFragment.ARG_MESSAGE, options.getString(KEY_MESSAGE));
+        }
+        if (options.hasKey(KEY_BUTTON_POSITIVE)) {
+            args.putString(RNPromptFragment.ARG_BUTTON_POSITIVE, options.getString(KEY_BUTTON_POSITIVE));
+        }
+        if (options.hasKey(KEY_BUTTON_NEGATIVE)) {
+            args.putString(RNPromptFragment.ARG_BUTTON_NEGATIVE, options.getString(KEY_BUTTON_NEGATIVE));
+        }
+        if (options.hasKey(KEY_BUTTON_NEUTRAL)) {
+            args.putString(RNPromptFragment.ARG_BUTTON_NEUTRAL, options.getString(KEY_BUTTON_NEUTRAL));
+        }
+        if (options.hasKey(KEY_ITEMS)) {
+            ReadableArray items = options.getArray(KEY_ITEMS);
+            CharSequence[] itemsArray = new CharSequence[items.size()];
+            for (int i = 0; i < items.size(); i++) {
+                itemsArray[i] = items.getString(i);
+            }
+            args.putCharSequenceArray(RNPromptFragment.ARG_ITEMS, itemsArray);
+        }
+        if (options.hasKey(KEY_CANCELABLE)) {
+            args.putBoolean(KEY_CANCELABLE, options.getBoolean(KEY_CANCELABLE));
+        }
+        fragmentManagerHelper.showNewAlert(mIsInForeground, args, callback);
+    }
+
 
     @ReactMethod
     public void promptWithArgs(ReadableMap options, final Callback callback) {
