@@ -99,60 +99,62 @@ public class RNPromptFragment extends DialogFragment implements DialogInterface.
         AlertDialog alertDialog = builder.create();
 
         Boolean isShowInput = arguments.getBoolean(ARG_SHOW_INPUT, false);
-        if (isShowInput) {
-            // input style
-            LayoutInflater inflater = LayoutInflater.from(activityContext);
-            final EditText input;
-            switch (style) {
-                case "shimo":
-                    input = (EditText) inflater.inflate(R.layout.edit_text, null);
-                    break;
-                default:
-                    input = new EditText(activityContext);
-            }
-
-            // input type
-            int type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-            if (arguments.containsKey(ARG_TYPE)) {
-                String typeString = arguments.getString(ARG_TYPE);
-                if (typeString != null) {
-                    switch (typeString) {
-                        case "secure-text":
-                            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-                            break;
-                        case "numeric":
-                            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER;
-                            break;
-                        case "email-address":
-                            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
-                            break;
-                        case "phone-pad":
-                            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_PHONE;
-                            break;
-                        case "plain-text":
-                        default:
-                            type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
-                    }
-                }
-            }
-            input.setInputType(type);
-
-            if (arguments.containsKey(ARG_DEFAULT_VALUE)) {
-                String defaultValue = arguments.getString(ARG_DEFAULT_VALUE);
-                if (defaultValue != null) {
-                    input.setText(defaultValue);
-                    int textLength = input.getText().length();
-                    input.setSelection(textLength, textLength);
-                }
-            }
-
-            if (arguments.containsKey(ARG_PLACEHOLDER)) {
-                input.setHint(arguments.getString(ARG_PLACEHOLDER));
-            }
-            alertDialog.setView(input, 50, 15, 50, 0);
-
-            mInputText = input;
+        if (!isShowInput) {
+            return alertDialog;
         }
+        
+        // input style
+        LayoutInflater inflater = LayoutInflater.from(activityContext);
+        final EditText input;
+        switch (style) {
+            case "shimo":
+                input = (EditText) inflater.inflate(R.layout.edit_text, null);
+                break;
+            default:
+                input = new EditText(activityContext);
+        }
+
+        // input type
+        int type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+        if (arguments.containsKey(ARG_TYPE)) {
+            String typeString = arguments.getString(ARG_TYPE);
+            if (typeString != null) {
+                switch (typeString) {
+                    case "secure-text":
+                        type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                        break;
+                    case "numeric":
+                        type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER;
+                        break;
+                    case "email-address":
+                        type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
+                        break;
+                    case "phone-pad":
+                        type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_PHONE;
+                        break;
+                    case "plain-text":
+                    default:
+                        type = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+                }
+            }
+        }
+        input.setInputType(type);
+
+        if (arguments.containsKey(ARG_DEFAULT_VALUE)) {
+            String defaultValue = arguments.getString(ARG_DEFAULT_VALUE);
+            if (defaultValue != null) {
+                input.setText(defaultValue);
+                int textLength = input.getText().length();
+                input.setSelection(textLength, textLength);
+            }
+        }
+
+        if (arguments.containsKey(ARG_PLACEHOLDER)) {
+            input.setHint(arguments.getString(ARG_PLACEHOLDER));
+        }
+        alertDialog.setView(input, 50, 15, 50, 0);
+
+        mInputText = input;
         
         return alertDialog;
     }
