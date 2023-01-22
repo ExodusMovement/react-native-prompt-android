@@ -94,6 +94,9 @@ public class RNPromptModule extends ReactContextBaseJavaModule implements Lifecy
         }
     }
 
+    /**
+     * reference: https://github.com/facebook/react-native/commit/0cd2f77116cbac8c5a402a355c2d359163429962
+     */
     @ReactMethod
     public void alertWithArgs(
          ReadableMap options, final Callback callback) {

@@ -91,6 +91,9 @@ type DialogOptions = {
     cancelable?: boolean,
 };
 
+/**
+ * reference: https://github.com/facebook/react-native/blob/e71b094b24ea5f135308b1e66c86216d9d693403/Libraries/Alert/Alert.js#L43-L114
+ */
 function alert(
     title: ?string,
     message?: ?string,
